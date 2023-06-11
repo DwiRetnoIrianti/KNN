@@ -89,12 +89,12 @@ X = tfidf.fit_transform(df['proses ulasan'])
 Y = df['rating']
 
 ## Train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_state=42)
 
-tetangga_terdekat = st.slider('K ', value=440, max_value=800, min_value=1, help="k adalah tetangga terdekat")
+#tetangga_terdekat = st.slider('K ', value=440, max_value=800, min_value=1, help="k adalah tetangga terdekat")
 
 # Train the KNN model
-knn = KNeighborsClassifier(n_neighbors=(tetangga_terdekat))
+knn = KNeighborsClassifier(n_neighbors=440)
 knn.fit(X_train, y_train)
 
 y_pred = knn.predict(X_test)
