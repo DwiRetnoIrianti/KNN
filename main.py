@@ -3,6 +3,9 @@ import pandas as pd
 import re
 import string
 
+from streamlit_extras.colored_header import colored_header
+from streamlit_extras.let_it_rain import rain
+
 import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -14,30 +17,84 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 import time
 
-st.set_page_config(page_icon="🛵", page_title="KEPUASAN PELANGGAN GOJEK", initial_sidebar_state="auto")
+st.set_page_config(page_icon="🎭", page_title="KEPUASAN PELANGGAN GOJEK", initial_sidebar_state="auto")
 
+page_bg_img = f"""
+<style>
+
+[data-testid="stAppViewContainer"] > .main {{
+background-image: url("https://blog.gojek.io/content/images/size/w2000/2021/02/API-Design-blog-01-01.png");
+background-size: 100%;
+background-height: auto;
+}}
+
+[data-testid="stHeader"] {{
+background: rgba(0,0,0,0);
+}}
+
+</style>
+"""
+
+st.markdown(page_bg_img, unsafe_allow_html=True)
 
 hide_menu_style = """
         <style>
         footer {visibility: visible;}
-        footer:after{content:'Copyright @ 2023 Dwi R.I 🦖'; display:block; position:relative; color:green}
+        footer:after{content:'Copyright @ 2023 Dwi Retno Irianti. All Rights Reserved'; display:block; position:relative; color:white}
         #MainMenu {visibility: hidden;}
         header {visibility: hidden;}
         </style>
         """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-
-primaryColor = st.get_option("theme.primaryColor")
-s = f"""
+m = """
 <style>
-div.stButton > button:first-child {{ border: 5px solid {primaryColor}; border-radius:20px 20px 20px 20px; }}
-<style>
-"""
-st.markdown(s, unsafe_allow_html=True)
 
-# Streamlit web app
+.stAlert {
+    text-color: #fff;
+}
+div.stButton > button:first-child {
+    background-color: #000;
+    border-radius:20px 20px 20px 20px;
+}
+div.stButton > button:hover {
+    background-color: #004758;
+    border: 0.5px solid #000;
+    }
+div.css-1om1ktf.e1y61itm0 {
+
+        }
+        textarea.st-cl {
+
+          background-color: #ecefec;
+          color: #000;
+          font-family:"Roboto", serif;
+          font-size: 16px;
+        }
+div.css-1dj3z61.e1iq63gx0 {
+color: #fff;
+}
+p{
+color: white;
+}
+</style>"""
+st.markdown(m, unsafe_allow_html=True)
+
+# from streamlit_extras.badges import badge
+
+#logo_url = ("https://1000marcas.net/wp-content/uploads/2021/06/Gojek-Logo-2048x1280.png")
+
+
+# badge(type="github", name="gojek", url="https://play.google.com/store/apps/details?id=com.gojek.app")
+
 st.title('Klasifikasi Kepuasan Pelanggan Ojek Online (GOJEK)')
+
+colored_header(
+    label=" ",
+    description="",
+    color_name="green-70",
+)
+
 st.write('IMPLEMENTASI TEXT PADA KLASIFIKASI KEPUASAN PELANGGAN TRANSPORTASI ONLINE (OJEK ONLINE) MENGGUNAKAN METODE KNN')
 
 # Load the data
@@ -102,9 +159,9 @@ accuracy = accuracy_score(y_test, y_pred) *100
 
 # Daftar kata-kata positif dan negatif
 kata_positif = ['senang', 'membantu', 'lancar',
-                'mantap', 'semoga', 'bagus', 'memuaskan', 'memudahkan', 'sangat puas'
-                ,'bagus', 'keren', 'puas']
-kata_negatif = ['kecewa', 'buruk', 'jelek', 'mahal', 'tidak', 'error','bajingan', 'bangsat', ]
+                'mantap', 'semoga', 'bagus', 'memuaskan', 'memudahkan', 'sangat puas',
+                'bagus', 'keren', 'puas']
+kata_negatif = ['kecewa', 'buruk', 'jelek', 'mahal', 'tidak', 'error', 'bajingan', 'bangsat']
 
 
 # Fungsi untuk mengklasifikasikan berdasarkan kata-kata positif dan negatif
@@ -144,7 +201,7 @@ def predict_satisfaction(review):
         return 'Tidak Puas'
 
 # User input
-user_input = st.text_area('Masukkan ulasan Anda')
+user_input = st.text_area('Masukkan ulasan Anda ⬇')
 
 if st.button('Klasifikasi'):
     if user_input:
@@ -156,10 +213,17 @@ if st.button('Klasifikasi'):
         # Display the predicted label
         if prediction == 'Puas':
             st.success('Berdasarkan ulasan yang Anda berikan, Anda merasa PUAS.')
+            st.balloons()
         else:
             st.warning('Berdasarkan ulasan yang Anda berikan, Anda merasa TIDAK PUAS.')
         # Display accuracy
-        st.markdown(f"Akurasi model: {accuracy:.2f}%")
+        st.markdown(f"Nilai Akurasi : {accuracy:.2f}%")
+        rain(
+            emoji="🎭",
+            font_size=30,
+            falling_speed=10,
+            animation_length="infinite",
+        )
     else:
-        st.info('Masukkan ulasan Anda sebelum melakukan klasifikasi')
+        st.info("Masukkan ulasan Anda sebelum melakukan klasifikasi")
         st.stop()
